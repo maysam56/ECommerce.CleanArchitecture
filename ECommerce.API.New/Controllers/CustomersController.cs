@@ -1,8 +1,6 @@
 using ECommerce.Application.Features.Customer.DTOs;
-using ECommerce.Application.Interfaces.IServices;
 using ECommerece.Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.API.Controllers;

@@ -4,36 +4,41 @@ using ECommerce.Application.Interfaces.IRepository.CustomerRepository;
 using ECommerce.Application.Interfaces.IRepository.OrderRepository;
 using ECommerce.Application.Interfaces.IRepository.PaymentRepository;
 using ECommerce.Application.Interfaces.IRepository.ProductRepository;
-using ECommerce.DAL.Entities;
 using ECommerece.Domain.Entities;
+using ECommerece.Domain.Enum;
 using MediatR;
 public class CheckoutOrderHandler : IRequestHandler<CheckoutOrderCommand, CheckoutResponseDto>
 {
-    private readonly IOrderReadRepository _orderRepository;
-    private readonly ICustomerReadRepository _customerRepository;
-    private readonly IPaymentReadRepository _paymentRepository;
-    private readonly IProductReadRepository _productRepository;
-    private readonly ICouponRepository _couponRepository;
+    private readonly IOrderWriteRepository _orderWriteRepository;
+    private readonly ICustomerReadRepository _customerReadRepository;
+    private readonly IPaymentWriteRepository _paymentWriteRepository;
+    private readonly ICouponReadRepository _couponReadRepository;
+    private readonly IProductWriteRepository _productWriteRepository;
+    private readonly IProductReadRepository _productReadRepository;
 
-    public CheckoutOrderHandler(IOrderReadRepository orderRepository,
-        ICustomerReadRepository customerRepository ,
-        IPaymentReadRepository paymentRepository ,
-        IProductReadRepository productRepository ,
-        ICouponRepository couponRepository
+    public CheckoutOrderHandler(
+        IOrderWriteRepository orderWriteRepository,
+        ICustomerReadRepository customerReadRepository,
+        IPaymentWriteRepository paymentWriteRepository,
+        IProductReadRepository productReadRepository,
+        ICouponReadRepository couponReadRepository ,
+         IProductWriteRepository productWriteRepository
+
 
         )
     {
-        _orderRepository = orderRepository;
-        _customerRepository = customerRepository;
-        _paymentRepository = paymentRepository;
-        _productRepository = productRepository;
-        _couponRepository = couponRepository;
+        _orderWriteRepository = orderWriteRepository;
+        _customerReadRepository = customerReadRepository;
+        _paymentWriteRepository = paymentWriteRepository;
+        _couponReadRepository = couponReadRepository;
+        _productWriteRepository = productWriteRepository;
+        _productReadRepository = productReadRepository;
     }
     public async Task<CheckoutResponseDto> Handle(CheckoutOrderCommand request, CancellationToken cancellationToken)
     {
 
       
-        var customer = await _customerRepository.GetByIdAsync(request.dto.CustomerId , cancellationToken);
+        var customer = await _customerReadRepository.GetByIdAsync(request.dto.CustomerId , cancellationToken);
 
         if (customer == null)
         {
@@ -53,7 +58,7 @@ public class CheckoutOrderHandler : IRequestHandler<CheckoutOrderCommand, Checko
                     "Product quantity must be at least 1.");
             }
 
-            var product = await _productRepository
+            var product = await _productReadRepository
                 .GetByIdAsync(itemDto.ProductId, cancellationToken);
 
             if (product == null)
@@ -82,7 +87,7 @@ public class CheckoutOrderHandler : IRequestHandler<CheckoutOrderCommand, Checko
             product.SetStockQuantity(
                 product.StockQuantity - itemDto.Quantity);
 
-            await _productRepository.UpdateProductAsync(product);
+            await _productWriteRepository.UpdateProductAsync(product);
         }
 
         decimal discount = 0m;
@@ -94,7 +99,7 @@ public class CheckoutOrderHandler : IRequestHandler<CheckoutOrderCommand, Checko
 
         if (!string.IsNullOrWhiteSpace(request.dto.CouponCode))
         {
-            var coupon = await _couponRepository
+            var coupon = await _couponReadRepository
                 .GetByCodeAsync(request.dto.CouponCode, cancellationToken);
 
             if (coupon == null || !coupon.IsActive)
@@ -153,10 +158,10 @@ public class CheckoutOrderHandler : IRequestHandler<CheckoutOrderCommand, Checko
             IsSuccess = true
         };
 
-        await _orderRepository.AddAsync(order, cancellationToken);
-        await _paymentRepository.AddAsync(payment, cancellationToken);
+        await _orderWriteRepository.AddAsync(order, cancellationToken);
+        await _paymentWriteRepository.AddAsync(payment, cancellationToken);
 
-        await _orderRepository.SaveChangesAsync(cancellationToken);
+        await _orderWriteRepository.SaveChangesAsync(cancellationToken);
 
         return new CheckoutResponseDto
         {

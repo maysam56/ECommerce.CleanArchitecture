@@ -1,4 +1,4 @@
-namespace ECommerce.DAL.Entities;
+namespace ECommerece.Domain.Enum;
 
 public enum OrderStatus
 {

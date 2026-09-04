@@ -1,5 +1,4 @@
-
-using ECommerce.DAL.Entities;
+using ECommerece.Domain.Enum;
 
 namespace ECommerece.Domain.Entities;
 

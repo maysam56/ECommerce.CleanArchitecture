@@ -4,17 +4,19 @@ using MediatR;
 
 public class RegisterCustomerHandler : IRequestHandler<RegisterCustomerCommand, Customer>
 {
-    private readonly ICustomerReadRepository _customerRepository;
+    private readonly ICustomerWriteRepository _customerWriteRepository;
+    private readonly ICustomerReadRepository _customerReadRepository;
 
-    public RegisterCustomerHandler(ICustomerReadRepository customerRepository)
+    public RegisterCustomerHandler(ICustomerWriteRepository customerWriteRepository , ICustomerReadRepository customerReadRepository)
     {
-        _customerRepository = customerRepository;
+        _customerWriteRepository = customerWriteRepository;
+        _customerReadRepository = customerReadRepository;
     }
     public async Task<Customer> Handle(RegisterCustomerCommand request, CancellationToken cancellationToken)
     {
         var dto = request.Dto;
 
-        var emailExists = await _customerRepository.checkEmailExsist(dto.Email , cancellationToken);
+        var emailExists = await _customerReadRepository.checkEmailExsist(dto.Email , cancellationToken);
 
         if (emailExists)
         {
@@ -28,8 +30,8 @@ public class RegisterCustomerHandler : IRequestHandler<RegisterCustomerCommand, 
             IsVip = dto.IsVip
         };
 
-        await _customerRepository.AddAsync(customer, cancellationToken);
-        await _customerRepository.SaveChangesAsync(cancellationToken);
+        await _customerWriteRepository.AddAsync(customer, cancellationToken);
+        await _customerWriteRepository.SaveChangesAsync(cancellationToken);
         return customer;
 
     }

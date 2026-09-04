@@ -4,16 +4,16 @@ using MediatR;
 
 public class GetAllProductHandler : IRequestHandler<GetAllProductQuery, IReadOnlyList<Product>>
 {
-    private readonly IProductReadRepository _productRepository;
+    private readonly IProductReadRepository _productReadRepository;
 
-    public GetAllProductHandler(IProductReadRepository productRepository)
+    public GetAllProductHandler(IProductReadRepository productReadRepository)
     {
-       _productRepository = productRepository;
+        _productReadRepository = productReadRepository;
     }
 
     public async Task<IReadOnlyList<Product>> Handle(GetAllProductQuery request, CancellationToken cancellationToken)
     {
-        return await _productRepository.GetAllAsync(cancellationToken);
+        return await _productReadRepository.GetAllAsync(cancellationToken);
 
     }
 }

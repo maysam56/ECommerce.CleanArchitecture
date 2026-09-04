@@ -4,14 +4,19 @@ using MediatR;
 
 public class AddProductHandler : IRequestHandler<AddProductCommand, Product>
 {
-    private readonly IProductReadRepository _productRepository;
+    private readonly IProductReadRepository _productReadRepository;
+    private readonly IProductWriteRepository _productWriteRepository;
 
-    public AddProductHandler(IProductReadRepository productRepository) {
-       _productRepository = productRepository;
+    public AddProductHandler(IProductReadRepository productReadRepository ,
+        IProductWriteRepository productWriteRepository ){
+        
+      
+        _productReadRepository = productReadRepository;
+        _productWriteRepository = productWriteRepository;
     }
     public async  Task<Product> Handle(AddProductCommand request, CancellationToken cancellationToken)
     {
-        var skuExists = await _productRepository.ExistsBySkuAsync(request.productDto.SKU , cancellationToken);
+        var skuExists = await _productReadRepository.ExistsBySkuAsync(request.productDto.SKU , cancellationToken);
 
         if (skuExists)
             throw new InvalidOperationException($"Product with SKU '{request.productDto.SKU}' already exists.");
@@ -25,8 +30,8 @@ public class AddProductHandler : IRequestHandler<AddProductCommand, Product>
         product.SetPrice(request.productDto.Price);
         product.SetStockQuantity(request.productDto.StockQuantity);
 
-        await _productRepository.AddProductAsync(product , cancellationToken);
-        await _productRepository.SaveChangesAsync(cancellationToken);
+        await _productWriteRepository.AddProductAsync(product , cancellationToken);
+        await _productWriteRepository.SaveChangesAsync(cancellationToken);
         return product;
     }
 }

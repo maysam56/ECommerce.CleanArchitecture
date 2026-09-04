@@ -3,15 +3,19 @@ using MediatR;
 
 public class UpdateProductHandler : IRequestHandler<UpdateProductCommand>
 {
-    private readonly IProductReadRepository _productRepository;
+    private readonly IProductReadRepository _productReadRepository;
+    private readonly IProductWriteRepository _productWriteRepository;
 
-    public UpdateProductHandler(IProductReadRepository productRepository)
+    public UpdateProductHandler( IProductReadRepository productReadRepository ,
+        IProductWriteRepository productWriteRepository  )
+       
     {
-       _productRepository = productRepository;
+        _productReadRepository = productReadRepository;
+        _productWriteRepository = productWriteRepository;
     }
     public async Task Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
-        var existing = await _productRepository.GetByIdAsync(request.id, cancellationToken);
+        var existing = await _productReadRepository.GetByIdAsync(request.id, cancellationToken);
 
         if (existing == null) throw new KeyNotFoundException($"Product with ID {request.id} not found.");
 
@@ -20,7 +24,7 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductCommand>
         existing.SetPrice(request.product.Price);
         existing.SetStockQuantity(request.product.StockQuantity);
 
-        await _productRepository.UpdateProductAsync(existing);
-        await _productRepository.SaveChangesAsync(cancellationToken);
+        await _productWriteRepository.UpdateProductAsync(existing);
+        await _productWriteRepository.SaveChangesAsync(cancellationToken);
     }
 }

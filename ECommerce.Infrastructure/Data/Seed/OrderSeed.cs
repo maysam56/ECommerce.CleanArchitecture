@@ -1,5 +1,5 @@
-﻿using ECommerce.DAL.Entities;
-using ECommerece.Domain.Entities;
+﻿using ECommerece.Domain.Entities;
+using ECommerece.Domain.Enum;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Infrastructure.Data.Seed

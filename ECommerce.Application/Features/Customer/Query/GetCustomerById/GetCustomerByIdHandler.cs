@@ -3,14 +3,15 @@ using ECommerece.Domain.Entities;
 using MediatR;
 public class GetCustomerByIdHandler : IRequestHandler<GetCustomerByIdQuery, Customer?>
 {
-    public readonly ICustomerReadRepository _customerRepository;
-    public GetCustomerByIdHandler(ICustomerReadRepository customerRepository)
+    private readonly ICustomerReadRepository _customerReadRepository;
+
+    public GetCustomerByIdHandler(ICustomerReadRepository customerReadRepository)
     {
-        _customerRepository = customerRepository;
+        _customerReadRepository = customerReadRepository;
     }
 
     public async Task<Customer?> Handle(GetCustomerByIdQuery request, CancellationToken cancellationToken)
     {
-        return await _customerRepository.GetByIdAsync(request.CustomerId , cancellationToken);
+        return await _customerReadRepository.GetByIdAsync(request.CustomerId , cancellationToken);
     }
 }

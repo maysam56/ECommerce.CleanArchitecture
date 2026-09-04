@@ -1,23 +1,27 @@
 ﻿using ECommerce.Application.Interfaces.IRepository.OrderRepository;
 using ECommerce.Application.Interfaces.IRepository.ProductRepository;
-using ECommerce.DAL.Entities;
-using ECommerece.Domain.Entities;
+using ECommerece.Domain.Enum;
 using MediatR;
 
 public class CancelOrderHandler : IRequestHandler<CancelOrderCommand>
 {
-    private readonly IOrderReadRepository   _orderRepository;
-    private readonly IProductReadRepository _productRepository;
+    private readonly IOrderReadRepository _orderReadRepository;
+    private readonly IProductReadRepository _productReadRepository;
+    private readonly IOrderWriteRepository _orderWriteRepository;
 
-    public CancelOrderHandler( IOrderReadRepository orderRepository , IProductReadRepository productRepository)
+    public CancelOrderHandler( IOrderReadRepository orderReadRepository ,
+        IProductReadRepository productReadRepository ,
+        IOrderWriteRepository orderWriteRepository
+        )
     {
-      _orderRepository = orderRepository;
-        _productRepository = productRepository;
+        _orderReadRepository = orderReadRepository;
+        _productReadRepository = productReadRepository;
+        _orderWriteRepository = orderWriteRepository;
     }
     public async Task Handle(CancelOrderCommand request, CancellationToken cancellationToken)
     {
 
-        var order = await _orderRepository.GetForCancelAsync(request.id, cancellationToken);
+        var order = await _orderReadRepository.GetForCancelAsync(request.id, cancellationToken);
 
         if (order == null) throw new KeyNotFoundException("Order not found");
 
@@ -29,7 +33,7 @@ public class CancelOrderHandler : IRequestHandler<CancelOrderCommand>
         {
             foreach (var item in order.Items)
             {
-                var product = await _productRepository.GetByIdAsync(item.ProductId, cancellationToken);
+                var product = await _productReadRepository.GetByIdAsync(item.ProductId, cancellationToken);
                 if (product != null)
                 {
                     product.SetStockQuantity(product.StockQuantity + item.Quantity);
@@ -38,7 +42,7 @@ public class CancelOrderHandler : IRequestHandler<CancelOrderCommand>
         }
 
         order.Status = OrderStatus.Cancelled;
-        await _orderRepository.SaveChangesAsync(cancellationToken);
+        await _orderWriteRepository.SaveChangesAsync(cancellationToken);
 
     }
 }

@@ -1,6 +1,4 @@
 using ECommerce.Application.Features.Order.DTOs;
-using ECommerce.Application.Interfaces.IRepository;
-using ECommerce.Application.Interfaces.IServices;
 using ECommerece.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

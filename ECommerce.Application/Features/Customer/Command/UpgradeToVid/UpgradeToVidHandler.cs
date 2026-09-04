@@ -1,12 +1,15 @@
 ﻿using ECommerce.Application.Interfaces.IRepository.CustomerRepository;
-using ECommerce.DAL.Entities;
+using ECommerece.Domain.Enum;
 using MediatR;
 public class UpgradeToVidHandler : IRequestHandler<UpgradeToVidCommand>
 {
     private readonly ICustomerReadRepository _customerRepository;
-    public UpgradeToVidHandler(ICustomerReadRepository customerRepository)
+    private readonly ICustomerWriteRepository _customerWriteRepository;
+
+    public UpgradeToVidHandler(ICustomerReadRepository customerRepository, ICustomerWriteRepository customerWriteRepository)
     {
         _customerRepository = customerRepository;
+        _customerWriteRepository = customerWriteRepository;
     }
  
 
@@ -28,6 +31,6 @@ public class UpgradeToVidHandler : IRequestHandler<UpgradeToVidCommand>
            $"Total spend {totalSpent:C} is less than required $500.00.");
         }
         customer.IsVip = true;
-        await _customerRepository.SaveChangesAsync(cancellationToken);
+        await _customerWriteRepository.SaveChangesAsync(cancellationToken);
     }
 }   
