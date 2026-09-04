@@ -3,8 +3,6 @@ using ECommerce.Application.Interfaces.IRepository.CustomerRepository;
 using ECommerce.Application.Interfaces.IRepository.OrderRepository;
 using ECommerce.Application.Interfaces.IRepository.PaymentRepository;
 using ECommerce.Application.Interfaces.IRepository.ProductRepository;
-using ECommerce.Application.Interfaces.IServices;
-using ECommerce.Application.Services;
 using ECommerce.Infrastructure.Data.Context;
 using ECommerce.Infrastructure.Repositories.CouponRepository;
 using ECommerce.Infrastructure.Repositories.CustomerRepository;
@@ -27,14 +25,22 @@ namespace ECommerce.Infrastructure.Extensions
             options.UseSqlServer(
             configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddScoped<IOrderReadRepository, OrderWriteRepository>();
-            services.AddScoped<ICustomerReadRepository, CustomerWriteRepository>();
+            services.AddScoped<IOrderReadRepository, OrderReadRepository>();
+            services.AddScoped<IOrderWriteRepository, OrderWriteRepository>();
+
+            services.AddScoped<ICustomerReadRepository, CustomerReadRepository>();
+            services.AddScoped<ICustomerWriteRepository, CustomerWriteRepository>();
+
             services.AddScoped<IProductReadRepository, ProductReadRepository>();
-            services.AddScoped<IOrdersServices, OrdersServices>();
-            services.AddScoped<IProductsServices, ProductService>();
+            services.AddScoped<IProductWriteRepository, ProductWriteRepository>();
+
             services.AddScoped<IPaymentReadRepository, PaymentReadRepository>();
-            services.AddScoped<ICouponRepository, CouponReadRepository>();
-          
+            services.AddScoped<IPaymentWriteRepository, PaymentWriteRepository>();
+
+            services.AddScoped<ICouponWriteRepository, CouponWriteRepository>();
+            services.AddScoped<ICouponReadRepository, CouponReadRepository>();
+
+
             return services;
         }
     }
