@@ -1,3 +1,6 @@
+using ECommerce.Application.Features.Customer.DTOs;
+using ECommerece.Domain.Entities;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.API.Controllers;
@@ -7,74 +10,48 @@ namespace ECommerce.API.Controllers;
 public class CustomersController : ControllerBase
 {
 
-    public CustomersController()
+    private readonly IMediator _mediator;
+
+    public CustomersController(IMediator mediator)
     {
-        
+        _mediator = mediator;
     }
+
+   
+
+    // Get Customer By Id
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Customer>> GetById(int id)
     {
-        var customer = await _context.Customers
-            .Include(c => c.Orders)
-            .FirstOrDefaultAsync(c => c.Id == id);
+        var customer = await _mediator.Send(new GetCustomerByIdQuery(id));
 
         if (customer == null) 
             return NotFound($"Customer with ID {id} not found.");
 
         return Ok(customer);
     }
+    //-------------------------------------------------------------
+
+    // Create Customer
 
     [HttpPost]
     public async Task<ActionResult<Customer>> Create([FromBody] CreateCustomerDto dto)
     {
-        if (string.IsNullOrWhiteSpace(dto.FullName))
-            return BadRequest("Full name is required.");
-
-        if (string.IsNullOrWhiteSpace(dto.Email) || !dto.Email.Contains("@"))
-            return BadRequest("A valid email address is required.");
-
-        var emailExists = await _context.Customers.AnyAsync(c => c.Email.ToLower() == dto.Email.ToLower());
-        if (emailExists)
-        {
-            return BadRequest("Email is already registered.");
-        }
-
-        var customer = new Customer
-        {
-            FullName = dto.FullName,
-            Email = dto.Email,
-            IsVip = dto.IsVip
-        };
-
-        await _context.Customers.AddAsync(customer);
-        await _context.SaveChangesAsync();
+       var customer = await _mediator.Send(new RegisterCustomerCommand(dto)); 
 
         return CreatedAtAction(nameof(GetById), new { id = customer.Id }, customer);
     }
+    //----------------------------------------------
+    // Upgrade To Vip
 
     [HttpPost("{id}/upgrade-vip")]
     public async Task<IActionResult> UpgradeToVip(int id)
     {
-        var customer = await _context.Customers
-            .Include(c => c.Orders)
-            .FirstOrDefaultAsync(c => c.Id == id);
 
-        if (customer == null) 
-            return NotFound();
-
-        var totalSpent = customer.Orders
-            .Where(o => o.Status == OrderStatus.Paid)
-            .Sum(o => o.TotalAmount);
-
-        if (totalSpent < 500m)
-        {
-            return BadRequest($"Customer does not qualify for VIP. Total spend {totalSpent:C} is less than required $500.00");
-        }
-
-        customer.IsVip = true;
-        await _context.SaveChangesAsync();
+        await _mediator.Send(new UpgradeToVidCommand(id));
 
         return Ok(new { message = "Customer upgraded to VIP successfully." });
     }
+
 }
