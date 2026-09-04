@@ -1,8 +1,4 @@
-using ECommerce.API.DTOs;
-using ECommerce.DAL.Context;
-using ECommerce.DAL.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.API.Controllers;
 
@@ -10,11 +6,10 @@ namespace ECommerce.API.Controllers;
 [Route("api/[controller]")]
 public class CustomersController : ControllerBase
 {
-    private readonly AppDbContext _context;
 
-    public CustomersController(AppDbContext context)
+    public CustomersController()
     {
-        _context = context;
+        
     }
 
     [HttpGet("{id}")]

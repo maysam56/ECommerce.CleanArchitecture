@@ -1,0 +1,21 @@
+using ECommerece.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+
+namespace ECommerce.Infrastructure.Data.Context;
+
+public sealed class AppReadDbContext : DbContext
+{
+    public AppReadDbContext(DbContextOptions<AppReadDbContext> options) : base(options)
+    {
+        ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+    }
+
+    public DbSet<Product> Products => Set<Product>();
+    public DbSet<Customer> Customers => Set<Customer>();
+    public DbSet<Order> Orders => Set<Order>();
+    public DbSet<OrderItem> OrderItems => Set<OrderItem>();
+    public DbSet<Coupon> Coupons => Set<Coupon>();
+    public DbSet<Payment> Payments => Set<Payment>();
+
+ 
+}

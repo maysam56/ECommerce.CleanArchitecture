@@ -15,8 +15,4 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\ECommerce.API\ECommerce.API.csproj" />
-    <ProjectReference Include="..\..\src\ECommerce.DAL\ECommerce.DAL.csproj" />
-  </ItemGroup>
 </Project>

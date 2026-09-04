@@ -1,6 +1,6 @@
-using ECommerce.DAL.Context;
 using Microsoft.EntityFrameworkCore;
-
+using ECommerce.Infrastructure.Data.Context;
+using ECommerce.Application.Interfaces.IRepository;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -10,7 +10,7 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
-
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())

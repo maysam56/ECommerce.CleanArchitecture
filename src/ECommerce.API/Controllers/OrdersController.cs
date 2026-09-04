@@ -1,31 +1,22 @@
 using ECommerce.API.DTOs;
-using ECommerce.DAL.Context;
-using ECommerce.DAL.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
+using ECommerece.Domain.Entities;
 namespace ECommerce.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class OrdersController : ControllerBase
 {
-    private readonly AppDbContext _context;
 
-    public OrdersController(AppDbContext context)
+    public OrdersController()
     {
-        _context = context;
+       
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Order>> GetOrder(int id)
     {
-        var order = await _context.Orders
-            .Include(o => o.Items)
-            .ThenInclude(i => i.Product)
-            .Include(o => o.Payment)
-            .FirstOrDefaultAsync(o => o.Id == id);
-
+      
         if (order == null) return NotFound();
         return Ok(order);
     }
@@ -33,10 +24,7 @@ public class OrdersController : ControllerBase
     [HttpGet("customer/{customerId}")]
     public async Task<ActionResult<List<Order>>> GetCustomerOrders(int customerId)
     {
-        var orders = await _context.Orders
-            .Include(o => o.Items)
-            .Where(o => o.CustomerId == customerId)
-            .ToListAsync();
+       
 
         return Ok(orders);
     }
