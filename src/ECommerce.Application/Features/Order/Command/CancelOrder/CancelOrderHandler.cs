@@ -1,4 +1,5 @@
-﻿using ECommerce.Application.Interfaces.IRepository.OrderRepository;
+﻿using ECommerce.Application.Abstractions.Persistence;
+using ECommerce.Application.Interfaces.IRepository.OrderRepository;
 using ECommerce.Application.Interfaces.IRepository.ProductRepository;
 using ECommerece.Domain.Enum;
 using MediatR;
@@ -7,16 +8,16 @@ public class CancelOrderHandler : IRequestHandler<CancelOrderCommand>
 {
     private readonly IOrderReadRepository _orderReadRepository;
     private readonly IProductReadRepository _productReadRepository;
-    private readonly IOrderWriteRepository _orderWriteRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public CancelOrderHandler( IOrderReadRepository orderReadRepository ,
         IProductReadRepository productReadRepository ,
-        IOrderWriteRepository orderWriteRepository
-        )
+       IUnitOfWork unitOfWork )
+       
     {
         _orderReadRepository = orderReadRepository;
         _productReadRepository = productReadRepository;
-        _orderWriteRepository = orderWriteRepository;
+        _unitOfWork = unitOfWork;
     }
     public async Task Handle(CancelOrderCommand request, CancellationToken cancellationToken)
     {
@@ -42,7 +43,7 @@ public class CancelOrderHandler : IRequestHandler<CancelOrderCommand>
         }
 
         order.Status = OrderStatus.Cancelled;
-        await _orderWriteRepository.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
     }
 }

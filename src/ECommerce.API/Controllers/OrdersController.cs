@@ -16,8 +16,7 @@ public class OrdersController : ControllerBase
         _mediator = mediator;
     }
 
-    //---------------------------------------------------------
-
+    //Get Order By id 
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Order>> GetOrder(int id)
@@ -27,7 +26,7 @@ public class OrdersController : ControllerBase
         if (order == null) return NotFound();
         return Ok(order);
     }
-    //---------------------------------------------------------
+
     // Get Customer Orders
 
     [HttpGet("customer/{customerId}")]
@@ -38,7 +37,6 @@ public class OrdersController : ControllerBase
         return Ok(orders);
     }
 
-    //---------------------------------------------------------
 
     // Cancel Order
 
@@ -52,7 +50,6 @@ public class OrdersController : ControllerBase
             message = "Order cancelled successfully"
         });
     }
-    //---------------------------------------------------------
 
        [HttpPost("checkout")]
     public async Task<IActionResult> Checkout([FromBody] CreateOrderDto request)

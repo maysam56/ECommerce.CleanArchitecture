@@ -1,4 +1,5 @@
-﻿using ECommerce.Application.Features.Order.DTOs;
+﻿using ECommerce.Application.Abstractions.Persistence;
+using ECommerce.Application.Features.Order.DTOs;
 using ECommerce.Application.Interfaces.IRepository.CouponRepository;
 using ECommerce.Application.Interfaces.IRepository.CustomerRepository;
 using ECommerce.Application.Interfaces.IRepository.OrderRepository;
@@ -14,6 +15,7 @@ public class CheckoutOrderHandler : IRequestHandler<CheckoutOrderCommand, Checko
     private readonly IPaymentWriteRepository _paymentWriteRepository;
     private readonly ICouponReadRepository _couponReadRepository;
     private readonly IProductWriteRepository _productWriteRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IProductReadRepository _productReadRepository;
 
     public CheckoutOrderHandler(
@@ -22,7 +24,8 @@ public class CheckoutOrderHandler : IRequestHandler<CheckoutOrderCommand, Checko
         IPaymentWriteRepository paymentWriteRepository,
         IProductReadRepository productReadRepository,
         ICouponReadRepository couponReadRepository ,
-         IProductWriteRepository productWriteRepository
+         IProductWriteRepository productWriteRepository ,
+         IUnitOfWork unitOfWork
 
 
         )
@@ -32,6 +35,7 @@ public class CheckoutOrderHandler : IRequestHandler<CheckoutOrderCommand, Checko
         _paymentWriteRepository = paymentWriteRepository;
         _couponReadRepository = couponReadRepository;
         _productWriteRepository = productWriteRepository;
+        _unitOfWork = unitOfWork;
         _productReadRepository = productReadRepository;
     }
     public async Task<CheckoutResponseDto> Handle(CheckoutOrderCommand request, CancellationToken cancellationToken)
@@ -161,7 +165,7 @@ public class CheckoutOrderHandler : IRequestHandler<CheckoutOrderCommand, Checko
         await _orderWriteRepository.AddAsync(order, cancellationToken);
         await _paymentWriteRepository.AddAsync(payment, cancellationToken);
 
-        await _orderWriteRepository.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return new CheckoutResponseDto
         {

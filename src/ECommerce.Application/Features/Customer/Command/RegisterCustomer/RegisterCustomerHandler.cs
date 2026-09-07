@@ -1,4 +1,5 @@
-﻿using ECommerce.Application.Interfaces.IRepository.CustomerRepository;
+﻿using ECommerce.Application.Abstractions.Persistence;
+using ECommerce.Application.Interfaces.IRepository.CustomerRepository;
 using ECommerece.Domain.Entities;
 using MediatR;
 
@@ -6,11 +7,15 @@ public class RegisterCustomerHandler : IRequestHandler<RegisterCustomerCommand, 
 {
     private readonly ICustomerWriteRepository _customerWriteRepository;
     private readonly ICustomerReadRepository _customerReadRepository;
-
-    public RegisterCustomerHandler(ICustomerWriteRepository customerWriteRepository , ICustomerReadRepository customerReadRepository)
+    private readonly IUnitOfWork _unitOfWork;
+    public RegisterCustomerHandler(
+        ICustomerWriteRepository customerWriteRepository , 
+        ICustomerReadRepository customerReadRepository ,
+        IUnitOfWork unitOfWork)
     {
         _customerWriteRepository = customerWriteRepository;
         _customerReadRepository = customerReadRepository;
+        _unitOfWork = unitOfWork;
     }
     public async Task<Customer> Handle(RegisterCustomerCommand request, CancellationToken cancellationToken)
     {
@@ -31,7 +36,7 @@ public class RegisterCustomerHandler : IRequestHandler<RegisterCustomerCommand, 
         };
 
         await _customerWriteRepository.AddAsync(customer, cancellationToken);
-        await _customerWriteRepository.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return customer;
 
     }

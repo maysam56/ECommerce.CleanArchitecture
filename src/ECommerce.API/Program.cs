@@ -6,36 +6,42 @@ using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// Add services to the container
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
 
- DependencyInjection.AddInfrastructure(
+// Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Infrastructure
+DependencyInjection.AddInfrastructure(
     builder.Services,
     builder.Configuration
 );
 
+//Memory Cache
+builder.Services.AddMemoryCache();
+
+// Validation Behavior
 builder.Services.AddTransient(
-    typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-   
+    typeof(IPipelineBehavior<,>),
+    typeof(ValidationBehavior<,>)
+);
 
+// MediatR
 builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly( typeof(ApplicationAssemblyMarker).Assembly));
-       
+    cfg.RegisterServicesFromAssembly(
+        typeof(ApplicationAssemblyMarker).Assembly));
 
+// FluentValidation
 builder.Services.AddValidatorsFromAssembly(
     typeof(ApplicationAssemblyMarker).Assembly);
 
-//builder.Services.AddInfrastructure(builder.Configuration);
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+// Swagger Middleware
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

@@ -1,9 +1,11 @@
-﻿using ECommerce.Application.Interfaces.IRepository.CouponRepository;
+﻿using ECommerce.Application.Interfaces.IRepository.CartRepository;
+using ECommerce.Application.Interfaces.IRepository.CouponRepository;
 using ECommerce.Application.Interfaces.IRepository.CustomerRepository;
 using ECommerce.Application.Interfaces.IRepository.OrderRepository;
 using ECommerce.Application.Interfaces.IRepository.PaymentRepository;
 using ECommerce.Application.Interfaces.IRepository.ProductRepository;
 using ECommerce.Infrastructure.Data.Context;
+using ECommerce.Infrastructure.Repositories.CartRepository;
 using ECommerce.Infrastructure.Repositories.CouponRepository;
 using ECommerce.Infrastructure.Repositories.CustomerRepository;
 using ECommerce.Infrastructure.Repositories.OrderRepository;
@@ -39,7 +41,8 @@ namespace ECommerce.Infrastructure.Extensions
 
             services.AddScoped<ICouponWriteRepository, CouponWriteRepository>();
             services.AddScoped<ICouponReadRepository, CouponReadRepository>();
-
+           
+            services.AddScoped<ICartReadRepository, CartReadRepository>();
 
             return services;
         }

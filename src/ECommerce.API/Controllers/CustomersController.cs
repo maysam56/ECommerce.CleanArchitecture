@@ -31,7 +31,6 @@ public class CustomersController : ControllerBase
 
         return Ok(customer);
     }
-    //-------------------------------------------------------------
 
     // Create Customer
 
@@ -42,7 +41,6 @@ public class CustomersController : ControllerBase
 
         return CreatedAtAction(nameof(GetById), new { id = customer.Id }, customer);
     }
-    //----------------------------------------------
     // Upgrade To Vip
 
     [HttpPost("{id}/upgrade-vip")]

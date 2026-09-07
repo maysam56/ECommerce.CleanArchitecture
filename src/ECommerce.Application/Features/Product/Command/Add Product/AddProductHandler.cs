@@ -1,4 +1,5 @@
-﻿using ECommerce.Application.Interfaces.IRepository.ProductRepository;
+﻿using ECommerce.Application.Abstractions.Persistence;
+using ECommerce.Application.Interfaces.IRepository.ProductRepository;
 using ECommerece.Domain.Entities;
 using MediatR;
 
@@ -6,13 +7,16 @@ public class AddProductHandler : IRequestHandler<AddProductCommand, Product>
 {
     private readonly IProductReadRepository _productReadRepository;
     private readonly IProductWriteRepository _productWriteRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public AddProductHandler(IProductReadRepository productReadRepository ,
-        IProductWriteRepository productWriteRepository ){
+        IProductWriteRepository productWriteRepository ,
+        IUnitOfWork unitOfWork){
         
       
         _productReadRepository = productReadRepository;
         _productWriteRepository = productWriteRepository;
+        _unitOfWork = unitOfWork;
     }
     public async  Task<Product> Handle(AddProductCommand request, CancellationToken cancellationToken)
     {
@@ -31,7 +35,7 @@ public class AddProductHandler : IRequestHandler<AddProductCommand, Product>
         product.SetStockQuantity(request.productDto.StockQuantity);
 
         await _productWriteRepository.AddProductAsync(product , cancellationToken);
-        await _productWriteRepository.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return product;
     }
 }

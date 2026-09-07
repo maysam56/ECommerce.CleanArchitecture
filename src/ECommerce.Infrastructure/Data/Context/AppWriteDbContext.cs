@@ -1,4 +1,5 @@
-﻿using ECommerece.Domain.Entities;
+﻿using ECommerce.Domain.Entities;
+using ECommerece.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,8 @@ namespace ECommerce.Infrastructure.Data.Context
         public DbSet<OrderItem> OrderItems => Set<OrderItem>();
         public DbSet<Coupon> Coupons => Set<Coupon>();
         public DbSet<Payment> Payments => Set<Payment>();
-
+        public DbSet<CartItem> CartItems => Set<CartItem>();
+        public DbSet<Cart> Carts => Set<Cart>();
 
     }
 
