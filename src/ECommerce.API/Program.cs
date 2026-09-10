@@ -1,8 +1,11 @@
 using ECommerce.Application.Common;
 using ECommerce.Application.Common.Behavior;
+using ECommerce.Infrastructure.BackgroundJobs;
 using ECommerce.Infrastructure.Extensions;
 using FluentValidation;
 using MediatR;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +21,11 @@ DependencyInjection.AddInfrastructure(
     builder.Services,
     builder.Configuration
 );
+
+// Background Service
+builder.Services.AddHostedService<CartReminderBackgroundService>();
+builder.Services.AddHostedService<CartCleanupBackgroundService>();
+
 
 //Memory Cache
 builder.Services.AddMemoryCache();
