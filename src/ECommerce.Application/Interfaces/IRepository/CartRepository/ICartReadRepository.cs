@@ -7,5 +7,7 @@ namespace ECommerce.Application.Interfaces.IRepository.CartRepository
         Task<List<CartItem>> GetExpiredItemsAsync(
         DateTime expirationDate,
         CancellationToken cancellationToken);
+        Task<List<CartItem>> GetItemsForReminderAsync(
+        CancellationToken cancellationToken);
     }
 }

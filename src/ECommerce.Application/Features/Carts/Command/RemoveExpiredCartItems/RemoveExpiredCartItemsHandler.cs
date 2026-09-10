@@ -2,7 +2,7 @@
 using ECommerce.Application.Interfaces.IRepository.CartRepository;
 using MediatR;
 
-namespace ECommerce.Application.Carts.Commands.RemoveExpiredCartItems;
+namespace ECommerce.Application.Features.Carts.Command.RemoveExpiredCartItems;
 
 public class RemoveExpiredCartItemsCommandHandler  : IRequestHandler<RemoveExpiredCartItemsCommand>
   

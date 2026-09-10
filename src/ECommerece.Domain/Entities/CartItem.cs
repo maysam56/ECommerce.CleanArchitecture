@@ -1,4 +1,5 @@
-﻿using ECommerece.Domain.Entities;
+﻿
+using ECommerece.Domain.Entities;
 
 namespace ECommerce.Domain.Entities;
 
@@ -14,9 +15,11 @@ public class CartItem
 
     public DateTime AddedAt { get; private set; }
 
+    public DateTime? ReminderSentAt { get; set; }
+  
     // Navigation Property
     public Cart Cart { get; private set; } = null!;
-
+    public Product Product { get; private set; } = null!;
     private CartItem()
     {
     }
@@ -38,4 +41,5 @@ public class CartItem
     {
         return AddedAt.Add(expirationTime) <= utcNow;
     }
+
 }

@@ -1,4 +1,6 @@
-﻿namespace ECommerce.Domain.Entities;
+﻿using ECommerece.Domain.Entities;
+
+namespace ECommerce.Domain.Entities;
 
 public class Cart
 {
@@ -10,6 +12,8 @@ public class Cart
 
     public IReadOnlyCollection<CartItem> Items
         => _items.AsReadOnly();
+
+    public Customer customer { get; private set; } = null!;
 
     private Cart()
     {

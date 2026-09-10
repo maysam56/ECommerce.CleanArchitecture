@@ -23,4 +23,18 @@ public class CartReadRepository : ICartReadRepository
             .Where(x => x.AddedAt <= expirationDate)
             .ToListAsync(cancellationToken);
     }
+    public async Task<List<CartItem>> GetItemsForReminderAsync(
+         CancellationToken cancellationToken)
+    {
+        var fourDaysAgo = DateTime.UtcNow.AddDays(-4);
+
+        return await _context.CartItems
+            .Include(item => item.Cart)
+                .ThenInclude(cart => cart.customer)
+            .Include(item => item.Product)
+            .Where(item =>
+                item.AddedAt <= fourDaysAgo &&
+                item.ReminderSentAt == null)
+            .ToListAsync(cancellationToken);
+    }
 }
