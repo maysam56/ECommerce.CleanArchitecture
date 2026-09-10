@@ -20,5 +20,12 @@ public sealed class AppReadDbContext : DbContext
     public DbSet<CartItem> CartItems => Set<CartItem>();
     public DbSet<Cart> Carts => Set<Cart>();
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.ApplyConfigurationsFromAssembly(
+            typeof(AppReadDbContext).Assembly);
+    }
 
 }

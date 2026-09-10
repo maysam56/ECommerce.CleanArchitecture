@@ -6,7 +6,7 @@ namespace ECommerce.Infrastructure.Data.Seed
 {
     public static class ProductSeed
     {
-        public static async Task SeedAsync(AppReadDbContext context)
+        public static async Task SeedAsync(AppWriteDbContext context)
         {
             if (await context.Products.AnyAsync())
                 return;

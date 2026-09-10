@@ -1,4 +1,5 @@
 ﻿using ECommerce.Domain.Entities;
+using ECommerce.Infrastructure.Data.Seed;
 using ECommerece.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -21,6 +22,17 @@ namespace ECommerce.Infrastructure.Data.Context
         public DbSet<Payment> Payments => Set<Payment>();
         public DbSet<CartItem> CartItems => Set<CartItem>();
         public DbSet<Cart> Carts => Set<Cart>();
+
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ApplyConfigurationsFromAssembly(
+                typeof(AppWriteDbContext).Assembly);
+           
+            DatabaseSeeder.Seed(modelBuilder);
+        }
 
     }
 
