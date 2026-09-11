@@ -13,15 +13,14 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.12" />
+	  <PackageReference Include="QuestPDF" Version="2026.8.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ECommerce.Application\ECommerce.Application.csproj" />
     <ProjectReference Include="..\ECommerece.Domain\ECommerece.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="services\" />
   </ItemGroup>
 
 </Project>

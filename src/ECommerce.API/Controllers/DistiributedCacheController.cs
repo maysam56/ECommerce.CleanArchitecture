@@ -1,19 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using StackExchange.Redis;
 
 namespace ECommerce.API.Controllers
 {
     [Route("[controller]")]
     public class DistiributedCacheController : Controller
     {
+        IDatabase _database;
 
-        public DistiributedCacheController() { 
-        
+        public DistiributedCacheController(IConnectionMultiplexer connectionMultiplexer) 
+        {
+            _database = connectionMultiplexer.GetDatabase();
+        }
+        [HttpGet("get/{Key}")]
+        public IActionResult Get(string Key) {
+
+            var CacheValue = _database.StringGet(Key);
+            
+            if (string.IsNullOrEmpty(CacheValue)) 
+                return NotFound();
+
         }
     }
 }

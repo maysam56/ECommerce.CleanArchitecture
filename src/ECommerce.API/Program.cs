@@ -25,6 +25,7 @@ DependencyInjection.AddInfrastructure(
 // Background Service
 builder.Services.AddHostedService<CartReminderBackgroundService>();
 builder.Services.AddHostedService<CartCleanupBackgroundService>();
+builder.Services.AddHostedService<InvoiceBackgroundService>();
 
 
 //Memory Cache

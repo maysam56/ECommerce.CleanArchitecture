@@ -16,6 +16,7 @@ using ECommerce.Infrastructure.Repositories.OrderRepository;
 using ECommerce.Infrastructure.Repositories.PaymentRepository;
 using ECommerce.Infrastructure.Repositories.Persistence;
 using ECommerce.Infrastructure.Repositories.ProductRepository;
+using ECommerce.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,7 +37,7 @@ namespace ECommerce.Infrastructure.Extensions
 
             // Write DbContext
 
-            services.AddDbContext<AppReadDbContext>(options =>
+            services.AddDbContext<AppWriteDbContext>(options =>
           options.UseSqlServer(
           configuration.GetConnectionString("DefaultConnection")));
 
@@ -73,7 +74,10 @@ namespace ECommerce.Infrastructure.Extensions
             // Email Settings
           
             services.Configure<EmailSettings>(configuration.GetSection("Email"));
-                    
+
+            //
+            services.AddScoped<IInvoiceService, InvoiceService>();
+
             return services;
         }
     }

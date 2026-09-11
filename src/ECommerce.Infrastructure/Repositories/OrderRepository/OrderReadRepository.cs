@@ -1,6 +1,7 @@
 ﻿using ECommerce.Application.Interfaces.IRepository.OrderRepository;
 using ECommerce.Infrastructure.Data.Context;
 using ECommerece.Domain.Entities;
+using ECommerece.Domain.Enum;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -45,6 +46,27 @@ namespace ECommerce.Infrastructure.Repositories.OrderRepository
             .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
 
         }
-
+        public async Task<Order?> GetOrderForInvoiceAsync( int orderId,CancellationToken cancellationToken)        {
+            return await _context.Orders
+                .Include(order => order.Customer)
+                .Include(order => order.Items)
+                .ThenInclude(item => item.Product)
+                .FirstOrDefaultAsync(order => order.Id == orderId, cancellationToken);
+                   
+        }
+        public async Task<IReadOnlyList<Order>> GetOrdersForInvoiceAsync(CancellationToken cancellationToken)
+        {
+            return await _context.Orders
+                .Include(order => order.Customer)
+                .Include(order => order.Items)
+                    .ThenInclude(item => item.Product)
+                .Include(order => order.Payment)
+                .Where(order =>
+                    order.Status == OrderStatus.Paid &&
+                    order.Payment != null &&
+                    order.Payment.IsSuccess &&
+                    order.InvoiceSentAt == null)
+                .ToListAsync(cancellationToken);
+        }
     }
 }

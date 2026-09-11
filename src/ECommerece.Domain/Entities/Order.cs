@@ -19,7 +19,11 @@ public class Order
     public decimal ShippingFee { get; set; }
     
     public decimal TotalAmount { get; set; }
-    
+  
+    public DateTime? InvoiceSentAt { get; set; }
+   
     public List<OrderItem> Items { get; set; } = new();
+   
     public Payment? Payment { get; set; }
+
 }

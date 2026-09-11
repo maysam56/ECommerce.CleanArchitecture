@@ -1,4 +1,5 @@
 ﻿using ECommerce.Application.Interfaces.IServices;
+using ECommerce.Application.Models;
 using ECommerce.Application.Settings;
 using Microsoft.Extensions.Options;
 using System.Net;
@@ -18,7 +19,8 @@ public class EmailService : IEmailService
     public async Task SendEmailAsync(
         string to,
         string subject,
-        string body)
+        string body,
+        List<EmailAttachment>? attachments = null)
     {
         using var smtpClient = new SmtpClient(_emailSettings.Host)
         {
@@ -38,7 +40,21 @@ public class EmailService : IEmailService
         };
 
         mailMessage.To.Add(to);
+    
+        if (attachments is not null)
+        {
+            foreach (var attachment in attachments)
+            {
+                var stream = new MemoryStream(attachment.Content);
 
+                var mailAttachment = new Attachment(
+                    stream,
+                    attachment.FileName,
+                    attachment.ContentType);
+
+                mailMessage.Attachments.Add(mailAttachment);
+            }
+        }
         await smtpClient.SendMailAsync(mailMessage);
     }
 }
