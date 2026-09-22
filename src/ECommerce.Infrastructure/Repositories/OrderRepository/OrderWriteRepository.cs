@@ -18,11 +18,7 @@ namespace ECommerce.Infrastructure.Repositories.OrderRepository
             await _context.Orders.AddAsync(order, cancellationToken);
            
         }
-        // Save Changes Async
-        public async Task SaveChangesAsync(CancellationToken cancellationToken)
-        {
-            await _context.SaveChangesAsync(cancellationToken);
-        }
+     
 
     }
 }

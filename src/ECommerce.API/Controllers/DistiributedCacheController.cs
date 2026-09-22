@@ -19,6 +19,7 @@ namespace ECommerce.API.Controllers
             
             if (string.IsNullOrEmpty(CacheValue)) 
                 return NotFound();
+            return Ok(CacheValue.ToString());
 
         }
     }

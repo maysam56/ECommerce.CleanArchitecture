@@ -1,4 +1,5 @@
 using ECommerce.Application.Features.Product.DTOs;
+using ECommerce.Application.Interfaces.IServices;
 using ECommerece.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -10,9 +11,10 @@ namespace ECommerce.API.Controllers;
 public class ProductsController : ControllerBase
 {
     private readonly IMediator _mediator;
-
-    public ProductsController(IMediator mediator)
+    private readonly IProductViewCounter _productViewCounter;
+    public ProductsController(IMediator mediator, IProductViewCounter productViewCounter)
     {
+        _productViewCounter = productViewCounter;
         _mediator = mediator;
     }
 
@@ -33,7 +35,7 @@ public class ProductsController : ControllerBase
         var product = await _mediator.Send(new GetProductByIdQuery(id));
         if (product == null) 
             return NotFound($"Product with ID {id} not found.");
-            
+        await _productViewCounter.IncrementAsync(id);
         return Ok(product);
     }
 

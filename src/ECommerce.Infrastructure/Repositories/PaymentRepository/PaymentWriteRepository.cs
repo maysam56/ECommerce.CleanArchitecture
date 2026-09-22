@@ -19,11 +19,7 @@ namespace ECommerce.Infrastructure.Repositories.PaymentRepository
 
             await _context.Payments.AddAsync(payment, cancellationToken);
         }
-        public async Task SaveChangesAsync(CancellationToken cancellationToken)
-        {
-
-            await _context.SaveChangesAsync(cancellationToken);
-        }
+  
 
     }
 }

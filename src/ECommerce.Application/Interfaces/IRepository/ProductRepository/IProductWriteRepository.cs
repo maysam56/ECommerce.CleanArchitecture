@@ -10,7 +10,7 @@ namespace ECommerce.Application.Interfaces.IRepository.ProductRepository
         Task DeleteProductAsync(Product product);
         Task AddProductAsync(Product product, CancellationToken cancellationToken);
         Task UpdateProductAsync(Product product);
-        Task SaveChangesAsync(CancellationToken cancellationToken);
-
+        
+       
     }
 }

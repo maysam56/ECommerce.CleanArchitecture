@@ -13,14 +13,7 @@ namespace ECommerce.Infrastructure.Repositories.ProductRepository
         {
             _context = context;
         }
-        public async Task AddAsync(Product product, CancellationToken cancellationToken)
-        {
-            await _context.Products.AddAsync(product, cancellationToken);
-        }
-        public async Task SaveChangesAsync(CancellationToken cancellationToken)
-        {
-            await _context.SaveChangesAsync(cancellationToken);
-        }
+     
         public async Task DeleteProductAsync(Product product)
         {
             _context.Products.Remove(product);

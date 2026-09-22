@@ -9,7 +9,7 @@ public class Product
    public string SKU { get;  set; } = string.Empty;
    public decimal Price { get; private set; }
    public int StockQuantity { get; private set; }
-
+   public int ViewCount { get; private set; }
     public void SetPrice(decimal price)
     {
         if (price <= 0)
@@ -27,5 +27,11 @@ public class Product
 
         StockQuantity = quantity;
     }
+    public void IncreaseViewCount(int count)
+    {
+        if (count <= 0)
+            return;
 
+        ViewCount += count;
+    }
 }

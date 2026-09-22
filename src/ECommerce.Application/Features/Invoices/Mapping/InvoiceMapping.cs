@@ -1,5 +1,4 @@
 ﻿using ECommerce.Application.Features.Invoices.DTO;
-using ECommerce.Application.Features.Invoices.GenerateInvoice.DTO;
 
 namespace ECommerce.Application.Features.Invoices.Mapping;
 

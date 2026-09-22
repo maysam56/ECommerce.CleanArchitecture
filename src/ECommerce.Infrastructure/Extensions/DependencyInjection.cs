@@ -16,6 +16,7 @@ using ECommerce.Infrastructure.Repositories.OrderRepository;
 using ECommerce.Infrastructure.Repositories.PaymentRepository;
 using ECommerce.Infrastructure.Repositories.Persistence;
 using ECommerce.Infrastructure.Repositories.ProductRepository;
+using ECommerce.Infrastructure.services;
 using ECommerce.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -75,7 +76,10 @@ namespace ECommerce.Infrastructure.Extensions
           
             services.Configure<EmailSettings>(configuration.GetSection("Email"));
 
-            //
+            // Product View Counter
+            services.AddScoped<IProductViewCounter, ProductViewCounter>();
+
+            // Invoice Service
             services.AddScoped<IInvoiceService, InvoiceService>();
 
             return services;
